@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.wwz.dao.ApiConfigMapper">
+    <select id="findAll" resultMap="apiConfigResult">
+        select * from my_application_wwz.public.api_config
+    </select>
+
+    <select id="findOneById" resultMap="apiConfigResult">
+        select * from my_application_wwz.public.api_config where id=#{id}
+    </select>
+
+    <insert id="add" parameterType="com.hk.wwz.pojo.ApiConfig">
+      insert into my_application_wwz.public.api_config(id,app_key,app_secret,company_id,company_name,create_time)
+      values (#{id},#{appKey},#{appSecret},#{companyId},#{companyName},#{createTime})
+    </insert>
+
+    <update id="update" parameterType="com.hk.wwz.pojo.ApiConfig">
+     update my_application_wwz.public.api_config
+     set app_key = #{appKey},app_secret=#{appSecret},company_id=#{companyId},company_name=#{companyName},update_time=#{updateTime}
+     where id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+        delete from my_application_wwz.public.api_config where id=#{id}
+    </delete>
+
+    <resultMap type="com.hk.wwz.pojo.ApiConfig" id="apiConfigResult">
+        <id property="id" column="id"/>
+        <result property="appKey" column="app_key"/>
+        <result property="appSecret" column="app_secret"/>
+        <result property="companyId" column="company_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+</mapper>

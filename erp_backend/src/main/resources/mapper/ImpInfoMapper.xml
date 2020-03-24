@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.wwz.dao.ImpInfoMapper">
+    <resultMap id="impInfo" type="com.hk.wwz.pojo.ImpInfo">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="value" property="value"></result>
+        <result column="public_key" property="publicKey"></result>
+        <result column="private_key" property="privateKey"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="update_time" property="updateTime"></result>
+    </resultMap>
+
+    <insert id="insertImpInfo" parameterType="com.hk.wwz.pojo.ImpInfo">
+        insert into my_application_wwz.public.imp_info(id,"name","value",public_key,private_key,create_time,update_time)
+        values (#{id},#{name},#{value},#{publicKey},#{privateKey},#{createTime},#{updateTime});
+    </insert>
+
+    <update id="updateImpInfo" parameterType="com.hk.wwz.pojo.ImpInfo">
+        update my_application_wwz.public.imp_info set "value" = #{value},public_key=#{publicKey},private_key=#{privateKey},
+        update_time = #{updateTime} where "name" = #{name};
+    </update>
+
+    <select id="getImpInfoByName" resultMap="impInfo">
+        select * from my_application_wwz.public.imp_info where "name" = #{name};
+    </select>
+
+    <delete id="deleteImpInfo" parameterType="string">
+        delete from my_application_wwz.public.imp_info where "name" = #{name};
+    </delete>
+</mapper>
