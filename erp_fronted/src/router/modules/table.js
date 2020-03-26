@@ -35,6 +35,12 @@ const tableRouter = {
       component: () => import('@/views/table/complex-table'),
       name: 'ComplexTable',
       meta: { title: 'Complex Table' }
+    },
+    {
+      path: 'pwd-encrypt',
+      component: () => import('@/views/table/encrypt'),
+      name: '密码本',
+      meta: { title: '加密信息' }
     }
   ]
 }
