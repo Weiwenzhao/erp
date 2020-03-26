@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.wwz.dao.DepartMapper">
+    <resultMap id="departInfo" type="com.hk.wwz.pojo.Depart">
+        <id property="id" column="id"></id>
+        <result property="indexCode" column="index_code"></result>
+        <result property="parentIndexCode" column="parent_index_code"></result>
+        <result property="name" column="name"></result>
+        <result property="sourceIdentifier" column="source_identifier"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="departManageUserIdList" column="dept_manager_userid_list"></result>
+    </resultMap>
+
+    <select id="getAllDepart" resultMap="departInfo">
+        select * from my_application_wwz.public.depart;
+    </select>
+
+    <select id="getDepart" resultMap="departInfo">
+        select * from my_application_wwz.public.depart where id=#{id};
+    </select>
+
+    <delete id="deleteDepart" parameterType="java.util.List">
+        delete from my_application_wwz.public.depart
+        where index_code in
+        <foreach collection="list" index="index" item="indexCode" separator="," open="(" close=")">
+            (#{indexCode})
+        </foreach>
+    </delete>
+
+    <insert id="addDepart" parameterType="com.hk.wwz.pojo.Depart">
+        insert into my_application_wwz.public.depart(id,index_code,parent_index_code,"name",source_identifier,dept_manager_userid_list,update_time)
+        values (#{id},#{indexCode},#{parentIndexCode},#{name},#{sourceIdentifier},#{departManageUserIdList},#{updateTime})
+    </insert>
+
+    <insert id="addDepartList" parameterType="java.util.List">
+        insert into
+        my_application_wwz.public.depart(id,index_code,parent_index_code,"name",source_identifier,dept_manager_userid_list
+        ,update_time)
+        values
+        <foreach collection="list" index="index" item="depart" separator=",">
+            (#{depart.id},#{depart.indexCode},#{depart.parentIndexCode},#{depart.name},#{depart.sourceIdentifier},#{depart.departManageUserIdList},#{depart.updateTime})
+        </foreach>
+    </insert>
+</mapper>

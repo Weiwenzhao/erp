@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.wwz.dao.RoleUserMapper">
+    <resultMap id="userRoleInfo" type="com.hk.wwz.pojo.RoleUser">
+        <id property="id" column="id"></id>
+        <result property="role" column="role"></result>
+        <result property="user" column="user"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+    </resultMap>
+    <select id="getRoleByUser" resultMap="userRoleInfo">
+        select * from my_application_wwz.public.user_role where "user"=#{user};
+    </select>
+
+    <select id="getRoleById" resultMap="userRoleInfo">
+        select * from my_application_wwz.public.user_role where id=#{id};
+    </select>
+
+    <select id="getAllRoleUser" resultMap="userRoleInfo">
+        select * from my_application_wwz.public.user_role
+    </select>
+
+    <insert id="insertRoleUser" parameterType="com.hk.wwz.pojo.RoleUser">
+        insert into my_application_wwz.public.user_role(id,role,"user",create_time)
+        values (#{id},#{role},#{user},#{createTime});
+    </insert>
+
+    <update id="updateRoleUser" parameterType="com.hk.wwz.pojo.RoleUser">
+        update my_application_wwz.public.user_role set role=#{role},"user"=#{user},update_time=#{updateTime} where id=#{id};
+    </update>
+
+    <delete id="deleteRoleUser" parameterType="String">
+     delete from my_application_wwz.public.user_role where id=#{id};
+    </delete>
+</mapper>
