@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -22,8 +24,8 @@ public class LoginServiceImpl implements LoginService {
     LoginMapper loginDao;
 
     @Override
-    public ResponObj<String> login(Login login) {
-        ResponObj<String> result = new ResponObj<>(-1,"login failed");
+    public ResponObj<Map<String,String>> login(Login login) {
+        ResponObj<Map<String,String>> result = new ResponObj<>(-1,"login failed");
         try{
             QueryWrapper<Login> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_name",login.getUserName());
@@ -31,6 +33,9 @@ public class LoginServiceImpl implements LoginService {
             if(null != userInfo){
                 result.setCode(0);
                 result.setMsg("login success");
+                Map<String,String> map  = new HashMap<>();
+                map.put("token","admin-token");
+                result.setData(map);
                 return result;
             }
         }catch (Exception e){

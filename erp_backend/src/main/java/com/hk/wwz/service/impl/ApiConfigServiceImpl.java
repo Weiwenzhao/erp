@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hk.wwz.dao.ApiConfigMapper;
 import com.hk.wwz.dto.ConfigReqDto;
 import com.hk.wwz.pojo.ApiConfig;
+import com.hk.wwz.pojo.ResponObj;
 import com.hk.wwz.pojo.ResultBean;
 import com.hk.wwz.service.ApiConfigService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,36 +29,33 @@ public class ApiConfigServiceImpl implements ApiConfigService {
     ApiConfigMapper apiConfigDao;
 
     @Override
-    public ResultBean add(ApiConfig apiConfig) {
-
-//        ApiConfig oldApiConfig = apiConfigDao.findOneById(apiConfig.getId());
-//
-//
-//        log.info("获取的老数据是：" + JSON.toJSONString(oldApiConfig));
-//        ResultBean resultBean = new ResultBean();
-//        Timestamp time = new Timestamp(System.currentTimeMillis());
-//        if (oldApiConfig != null) {
-//            apiConfig.setUpdateTime(time);
-//            if (apiConfigDao.update(apiConfig) <= 0) {
-//                resultBean.setMessage("fail");
-//            } else {
-//                resultBean.setMessage(JSON.toJSONString(apiConfig));
-//            }
-//        } else {
-//            apiConfig.setId(UUID.randomUUID().toString().substring(0,31));
-//            apiConfig.setCreateTime(time);
-//            if (apiConfigDao.add(apiConfig) <= 0) {
-//                resultBean.setMessage("fail");
-//            } else {
-//                resultBean.setMessage(JSON.toJSONString(apiConfig));
-//            }
-//        }
-   //     return resultBean;
-        return null;
+    public ResponObj<Integer> add(ApiConfig apiConfig) {
+        ResponObj<Integer> result = new ResponObj<>(-1,"添加失败");
+        try{
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("company_id",apiConfig.getCompanyId());
+            queryWrapper.eq("name",apiConfig.getName());
+            ApiConfig config = apiConfigDao.selectOne(queryWrapper);
+            if(null != config){
+                result.setMsg("配置项已经存在!");
+                return result;
+            }
+            apiConfig.setCreateTime(new Timestamp(System.currentTimeMillis()));
+            int tmp = apiConfigDao.insert(apiConfig);
+            result.setCode(0);
+            result.setMsg("success");
+            result.setData(tmp);
+            return result;
+        }catch (Exception e){
+            log.error("添加系统属性配置异常：" + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
-    public List<ApiConfig> findAllByCompanyId(ConfigReqDto configReqDto) {
+    public ResponObj<List<ApiConfig>> find(ConfigReqDto configReqDto) {
+        ResponObj<List<ApiConfig>> resp = new ResponObj<>(-1,"获取系统属性异常");
         try{
             QueryWrapper<ApiConfig> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("company_id",configReqDto.getCompanyId());
@@ -65,12 +63,15 @@ public class ApiConfigServiceImpl implements ApiConfigService {
             IPage<ApiConfig> records = apiConfigDao.selectPage(page,queryWrapper);
             List<ApiConfig> apiConfigList = records.getRecords();
             log.info("获取到的数据是：" + JSON.toJSONString(apiConfigList));
-            return apiConfigList;
+            resp.setCode(0);
+            resp.setMsg("success");
+            resp.setData(apiConfigList);
+            return resp;
         }catch (Exception e){
             log.error("查询配置信息，异常：" + e.getMessage());
             e.printStackTrace();
         }
-        return null;
+        return resp;
     }
 
     @Override

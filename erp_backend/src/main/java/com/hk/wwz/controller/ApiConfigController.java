@@ -15,26 +15,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-@RequestMapping("/hk/wwz/apiConfig")
+@RequestMapping("/config")
 @RestController
 @CrossOrigin
 @Api(value = "apiConfig表")
 public class ApiConfigController {
     private Logger logger = LoggerFactory.getLogger(getClass());
-    @Autowired
+    @Resource
     ApiConfigService apiConfigService;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value = "添加或者更新apiConfig数据", notes = "添加或者更新apiConfig数据")
     @ApiImplicitParams({@ApiImplicitParam(name = "appKey", value = "appKey", dataType = "String", required = true), @ApiImplicitParam(name = "appSecret", value = "appSecret", dataType = "String", required = true), @ApiImplicitParam(name = "companyId", value = "companyId", dataType = "Integer", required = false), @ApiImplicitParam(name = "id", value = "id", dataType = "String", required = true), @ApiImplicitParam(name = "companyName", value = "companyName", dataType = "String", required = true)})
-    public ResultBean addApiConfig(@RequestBody ApiConfig apiConfig) {
-        logger.info("开始添加或者插入新的数据");
+    public ResponObj<Integer> addApiConfig(@RequestBody ApiConfig apiConfig) {
+        ResponObj<Integer> result = new ResponObj<>(-1,"添加失败");
+        if(null == apiConfig || StringUtils.isBlank(apiConfig.getName()) || StringUtils.isBlank(apiConfig.getValue())){
+            result.setMsg("不合法的参数");
+            return result;
+        }
         return apiConfigService.add(apiConfig);
     }
 
-    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
     @ApiImplicitParams({@ApiImplicitParam()})
     @ApiOperation(value = "获取所有apiConfig数据", notes = "获取所有apiConfig数据")
     public ResponObj<List<ApiConfig>> findAll(@RequestBody ConfigReqDto configReqDto) {
@@ -50,9 +55,7 @@ public class ApiConfigController {
         if(null == configReqDto.getPageSize() || 0 == configReqDto.getPageSize()){
             configReqDto.setPageSize(10);
         }
-        result.setMsg("success");
-        result.setData(apiConfigService.findAllByCompanyId(configReqDto));
-        return result;
+        return apiConfigService.find(configReqDto);
     }
 
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.DELETE)

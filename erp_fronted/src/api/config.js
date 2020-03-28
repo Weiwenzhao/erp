@@ -1,15 +1,16 @@
 import request from '@/utils/request'
 
-export function getRoutes() {
+export function find(data) {
   return request({
-    url: '/routes',
-    method: 'get'
+    url: '/config/find',
+    method: 'post',
+    data
   })
 }
 
-export function getRoles(data) {
+export function add(data) {
   return request({
-    url: '/role/findAllRole',
+    url: '/config/add',
     method: 'post',
     data
   })

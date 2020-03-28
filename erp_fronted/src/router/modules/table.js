@@ -41,6 +41,18 @@ const tableRouter = {
       component: () => import('@/views/table/encrypt'),
       name: '密码本',
       meta: { title: '加密信息' }
+    },
+    {
+      path: 'role',
+      component: () => import('@/views/table/role'),
+      name: '角色管理',
+      meta: { title: '角色管理' }
+    },
+    {
+      path: 'config',
+      component: () => import('@/views/table/config'),
+      name: '配置管理',
+      meta: { title: '系统配置' }
     }
   ]
 }

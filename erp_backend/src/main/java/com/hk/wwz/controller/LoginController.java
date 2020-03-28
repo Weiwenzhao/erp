@@ -35,7 +35,7 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "登陆鉴权接口", notes = "登陆鉴权接口")
     @ApiImplicitParams({@ApiImplicitParam(name = "userName", value = "登录用户名", dataType = "String", required = true), @ApiImplicitParam(name = "password", value = "登录密码", dataType = "String", required = true), @ApiImplicitParam(name = "isLocked", value = "用户锁定", dataType = "Integer", required = false), @ApiImplicitParam(name = "id", value = "id", required = false)})
-    public ResponObj<String> login(@RequestBody Login login) {
+    public ResponObj<Map<String,String>> login(@RequestBody Login login) {
         if (login == null || StringUtils.isBlank(login.getUserName()) || StringUtils.isBlank(login.getPassword())){
             return new ResponObj(-1, "用户名输入错误");
         }
